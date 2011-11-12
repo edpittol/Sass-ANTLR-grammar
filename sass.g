@@ -38,7 +38,7 @@ selector
 // declaração de uma propriedade
 // TODO : implementar para aceitar propriedades aninhadas
 propertydeclaration	
-	:	WORD CL (WORD)+ SC // margin: 10px; ou margin 10px 10px...;
+	:	WORD CL (WORD | VARIABLE)+ SC // margin: 10px; margin 10px 10px...;
 	;
 
 
@@ -53,7 +53,7 @@ BR     	       	: '}';
 DOLLAR		: '$';
 CHARSET_ID     	: '@charset ';
 
-WORD		: ('a'..'z'|'A'..'Z'|'0'..'9')+ ;
+WORD		: ('a'..'z'|'A'..'Z'|'0'..'9'|'-')+ ;
 STRING  	: '\'' ( ~('\n'|'\r'|'\f'|'\'') )* '\'';
 VARIABLE	: DOLLAR WORD;
 
