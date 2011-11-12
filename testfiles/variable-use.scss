@@ -1,0 +1,8 @@
+$blue: #3bbfce;
+$margin: 16px;
+
+.border {
+	padding: $margin;
+	margin: $margin;
+	border-color: $blue;
+}
