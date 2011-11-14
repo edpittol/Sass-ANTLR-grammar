@@ -21,9 +21,8 @@ rule
 	;
 
 // cabeçalho da regra, pode ter vários seletores, inclusive separado por vírgula
-// TODO: implementar para aceitar com vírgula
 rulehead
-	:	selector
+	:	selector (COMMA selector)*
 	;
 
 // seletor
@@ -62,7 +61,7 @@ DOLLAR		: '$';
 AMP		: '&';
 CHARSET_ID     	: '@charset ';
 
-WORD		: ('a'..'z'|'A'..'Z'|'0'..'9'|'-')+ ;
+WORD		: ('a'..'z'|'A'..'Z'|'0'..'9'|'-'|'#')+ ;
 STRING  	: '\'' ( ~('\n'|'\r'|'\f'|'\'') )* '\'';
 VARIABLE	: DOLLAR WORD;
 
