@@ -1,5 +1,8 @@
 grammar sass;
-
+@members {
+int contHead = 0;
+int contBody = 0;
+}
 sass 
     	:	charset
         	variabledeclaration*
@@ -13,13 +16,22 @@ charset
 
 // declaração de variáveis
 variabledeclaration
-	:	VARIABLE CL .+ SC ; // $blue: #3bbfce;
+	:	variable CL value SC ; // $blue: #3bbfce;
 
 // regras de css: seletores { propriedades }
 rule 
-	:	rulehead BL rulebody BR
+	:	rulehead BL 
+			rulebody 
+		BR
+		{	
+			System.out.println("\n" + contHead + ":rulehead: "+$rulehead.text);
+			contHead++;
+		}
+		{
+			System.out.println(contBody + ":rulebody: "+$rulebody.text);
+			contBody++;
+		}
 	;
-
 // cabeçalho da regra, pode ter vários seletores, inclusive separado por vírgula
 rulehead
 	:	selector (COMMA selector)*
@@ -39,31 +51,33 @@ rulebody
 			propertydeclaration	// declaração de propriedade
 		|	rule			// regra aninhada
 		)*;
-	
+
 // declaração de uma propriedade
 propertydeclaration	
 	:	WORD CL
 		(
-			(WORD | VARIABLE)+ SC		// propriedade ou variável
+			(WORD | variable)+ SC		// propriedade ou variável
 		|	BL (propertydeclaration)* BR	// propriedade aninhada
 		)
 		;
 
-// tokens
+value 		: WORD;
+variable	: DOLLAR WORD;
+
+		// tokens
 DOT    	       	: '.';
-COMMA		: ',';
+COMMA			: ',';
 SHARP  	       	: '#';
 CL    	       	: ':';
 SC     	       	: ';';
 BL     	       	: '{';
 BR     	       	: '}';
-DOLLAR		: '$';
-AMP		: '&';
+DOLLAR			: '$';
+AMP				: '&';
 CHARSET_ID     	: '@charset ';
 
-WORD		: ('a'..'z'|'A'..'Z'|'0'..'9'|'-'|'#')+ ;
+WORD		: ('a'..'z'|'A'..'Z'|'0'..'9'|'-'|'#'|'%')+ ;
 STRING  	: '\'' ( ~('\n'|'\r'|'\f'|'\'') )* '\'';
-VARIABLE	: DOLLAR WORD;
 
 
 
