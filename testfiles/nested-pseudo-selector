@@ -1,7 +1,0 @@
-a {
-	color: black;
-	&:hover { 
-		border-bottom: solid 1px; 
-	}
-}
-

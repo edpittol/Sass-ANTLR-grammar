@@ -1,8 +1,13 @@
 grammar sass;
-@members {
-int contHead = 0;
-int contBody = 0;
+
+options { output = AST; }
+
+tokens {
+	CHARSET;
+	RULE;
 }
+
+
 sass 
     	:	charset
         	variabledeclaration*
@@ -20,17 +25,7 @@ variabledeclaration
 
 // regras de css: seletores { propriedades }
 rule 
-	:	rulehead BL 
-			rulebody 
-		BR
-		{	
-			System.out.println("\n" + contHead + ":rulehead: "+$rulehead.text);
-			contHead++;
-		}
-		{
-			System.out.println(contBody + ":rulebody: "+$rulebody.text);
-			contBody++;
-		}
+	:	rulehead BL rulebody BR  -> ^(RULE ^(rulehead rulebody))
 	;
 // cabeçalho da regra, pode ter vários seletores, inclusive separado por vírgula
 rulehead
@@ -54,10 +49,10 @@ rulebody
 
 // declaração de uma propriedade
 propertydeclaration	
-	:	WORD CL
+	:	WORD^ CL!
 		(
-			(WORD | variable)+ SC		// propriedade ou variável
-		|	BL (propertydeclaration)* BR	// propriedade aninhada
+			(WORD | variable)+ SC!		// propriedade ou variável
+		|	BL! (propertydeclaration^)* BR!	// propriedade aninhada
 		)
 		;
 
@@ -72,14 +67,12 @@ CL    	       	: ':';
 SC     	       	: ';';
 BL     	       	: '{';
 BR     	       	: '}';
-DOLLAR			: '$';
-AMP				: '&';
+DOLLAR		: '$';
+AMP		: '&';
 CHARSET_ID     	: '@charset ';
 
 WORD		: ('a'..'z'|'A'..'Z'|'0'..'9'|'-'|'#'|'%')+ ;
 STRING  	: '\'' ( ~('\n'|'\r'|'\f'|'\'') )* '\'';
-
-
 
 NL		: '\r'? '\n' 	{skip();} ;
 WS  		: (' '|'\t')+ 	{skip();} ;
